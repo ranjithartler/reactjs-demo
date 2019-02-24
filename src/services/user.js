@@ -8,3 +8,10 @@ export const getUser = () => {
         dispatch({type: 'GET_USER', payload: resonse.data});  
     }
 }
+
+export const createUser = (postData) => {
+    return async (dispatch, getState) => {
+        const resonse = await HttpClient.post('/posts', postData);
+        dispatch({type: 'NEW_USER', payload: resonse.data});  
+    }
+}

@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { FormGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getUser } from '../services/user';
 
@@ -67,7 +66,7 @@ const mapStateToProps = (state) => {
         id: user.id,
         label: user.title,
     }));
-    debugger;
+    // debugger;
 
     return {options}
 }
