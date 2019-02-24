@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Formik, FieldArray } from 'formik';
+import { Formik, FieldArray, Field } from 'formik';
 import { Form, Button, Col, InputGroup } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { BrowserRouter, Redirect, withRouter} from 'react-router-dom';
 
 import { FormGroup } from './FormGroup';
+import { FormGroupClone } from './FormGroupClone';
 import { createUser } from '../services/user';
-
-
-const UserEmail = () => {
-
-}
-
-
-
-
 
 
 class UserForm extends Component {
@@ -58,22 +50,24 @@ class UserForm extends Component {
                 onSubmit = { this.handleSubmit }
                 displayName = 'userForm'
                 component = { this.form }
-                initialValues={{ emails: ['jared@gmail.com', 'ian@gmail.com', 'brent@gmail.com'] }}
+                initialValues={{ emails: [
+                    {email: 'jared@gmail.com'}, 
+                    {email: 'ian@gmail.com'},
+                    {email: 'brent@gmail.com'}
+                ] }}
             />
         );
     }
 
     form = (props) => {
-
-        console.log(props, "USER FORM");
-
-        const  { isValid } = props;
+        const { values } = props;
+        const { isValid } = props;
         let disabled = true;
 
         if(isValid) {
             disabled = false;
         }
-        console.log(props, "AAAAAAA", isValid);
+
         return (
             <Form onSubmit={props.handleSubmit}>
                 <FormGroup { ...props }
@@ -96,21 +90,30 @@ class UserForm extends Component {
                     type='text'
                     md='4'
                 />
+
                 <FieldArray 
                     name="emails"
-                    render={ arrayHelpers => (
-                        props.values.emails.map((email, index) => (
-                            <FormGroup { ...props }
-                                key={index}
-                                isInputGroup={'@'}
-                                isPrepend={true}
-                                name='email'
-                                // name={`emails[${index}].email`}
-                                label='Email'
-                                type='email'
-                                md='4'
-                            />
-                        ))
+                    render={ (arrayHelpers) => (
+                        <div>
+                            {values.emails && values.emails.length > 0 ? (
+                                values.emails.map((email, index) => (
+                                <React.Fragment key={index}>
+                                    <Field name={`emails.${index}.email`}
+                                        render={(innerProps) => (
+                                        // <CloneElemet {...innerProps} arrayName={arrayHelpers.name}
+                                        //     title="First Name" index={index}/>
+                                        <FormGroupClone { ...innerProps }
+                                            label='Email'
+                                            type='email'
+                                            md='4'
+                                            index={index}
+                                            arrayName={arrayHelpers.name}
+                                        />
+                                    )}  />
+                                </React.Fragment>
+                                ))
+                            ) : null}
+                        </div>
                     )}
                 />
 
@@ -130,5 +133,22 @@ class UserForm extends Component {
         console.log(this.props, "REMOVE ELEMENT");
     }
 }
+
+// const CloneElemet = ({ title, field, form, index, arrayName }) => (
+//     <label htmlFor={field.name}>
+//         <label>{title}</label>
+//         <input type="email" {...field}/>
+//         {
+//             form.errors[arrayName] !== undefined
+//             && form.errors[arrayName][index] !== undefined
+//             && form.touched[arrayName] !== undefined
+//             && form.touched[arrayName][index] !== undefined
+//             ? <span className="error" >{form.errors[arrayName][index].email}</span>
+//             : null
+//         }
+//     </label>
+// );
+
+
 
 export default withRouter(connect(null, { createUser })(UserForm));
