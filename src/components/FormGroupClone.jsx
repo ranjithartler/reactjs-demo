@@ -59,12 +59,12 @@ const FormControl = props => {
         handleBlur,
     } = form;
 
-    // let name = '';
+    let name = '';
 
-    // if(field.name !== undefined) {
-    //     name = field.name.split('.');
-    //     name = name[2];
-    // }
+    if(field.name !== undefined) {
+        name = field.name.split('.');
+        name = name[2];
+    }
 
     let isInvalidField = false;
     let isValidField = true;
@@ -75,9 +75,9 @@ const FormControl = props => {
         && touched[arrayName] !== undefined 
         && touched[arrayName][index] !== undefined) {
             
-            if(errors[arrayName][index].email){
+            if(errors[arrayName][index][name]){
                 isInvalidField = true;
-                errorMsg = errors[arrayName][index].email;
+                errorMsg = errors[arrayName][index][name];
             } else {
                 isValidField = false;
             }
